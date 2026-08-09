@@ -1,0 +1,28 @@
+/* Custom utility classes for 3D card flipping and safe scrolling */
+.perspective {
+    perspective: 1000px;
+}
+
+.transform-style {
+    transform-style: preserve-3d;
+}
+
+.backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow-y: auto;
+}
+
+.rotate-y-180 {
+    transform: rotateY(180deg);
+}
+
+#flashcard.is-flipped {
+    transform: rotateY(180deg);
+}
+
+/* Ensure answers are readable and have nice spacing */
+#cardAnswer {
+    line-height: 1.4;
+    padding: 0 10px;
+}
