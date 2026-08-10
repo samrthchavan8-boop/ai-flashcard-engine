@@ -336,6 +336,7 @@ fetchWebBtn.addEventListener('click', async () => {
     }
 });
 
+
 // ==================== 6. CLEAN & FORMATTABLE PDF EXPORT ====================
 downloadPdfBtn.addEventListener('click', () => {
     if (flashcardsData.length === 0) return;
