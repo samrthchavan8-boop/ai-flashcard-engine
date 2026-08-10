@@ -291,7 +291,7 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
 }
 
 
-// ==================== 5. GOOGLE GEMINI AI FETCHER ====================
+// ==================== 5. GOOGLE GEMINI AI BACKEND FETCHER ====================
 const fetchWebBtn = document.getElementById('fetchWebBtn');
 
 fetchWebBtn.addEventListener('click', async () => {
@@ -304,56 +304,38 @@ fetchWebBtn.addEventListener('click', async () => {
         return;
     }
 
-    let apiKey = localStorage.getItem('gemini_api_key');
-    if (!apiKey) {
-        apiKey = prompt("Enter your free Google Gemini API Key (AIzaSy...):");
-        if (!apiKey) {
-            alert("API key is required.");
-            return;
-        }
-        localStorage.setItem('gemini_api_key', apiKey);
-    }
-
     fetchWebBtn.textContent = "Asking Gemini...";
+    fetchWebBtn.disabled = true;
     
     try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${apiKey}`;
-        
-        const response = await fetch(url, {
+        const response = await fetch('/api/gemini', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: `Act as an expert educator. Provide structured study notes and flashcards for the topic: "${topic}". The content must be custom-tailored precisely to the academic level of a student in ${grade}, following the ${board} curriculum standards. Break it down into clear sections using headings (##) and short bullet point facts optimized for student flashcards.`
-                    }]
-                }]
-            })
+            body: JSON.stringify({ topic, grade, board })
         });
 
         const data = await response.json();
 
-        if (data.error) {
-            alert("Gemini Error: " + data.error.message);
-            localStorage.removeItem('gemini_api_key');
-            return;
+        if (!response.ok) {
+            throw new Error(data.error || "Failed to generate content.");
         }
 
-        const geminiAnswer = data.candidates[0].content.parts[0].text.trim();
-        
-        markdownInput.value = `Q: ${topic} (${grade} - ${board})\nA: ${geminiAnswer}`;
+        markdownInput.value = `Q: ${topic} (${grade} - ${board})\nA: ${data.result}`;
         
         // Save search history
         saveSearchHistory(topic);
         
     } catch (error) {
-        alert("Failed to connect to Google Gemini. Check your network.");
+        console.error("Error:", error);
+        alert("Error: " + error.message);
     } finally {
         fetchWebBtn.textContent = "Fetch Web";
+        fetchWebBtn.disabled = false;
     }
 });
+
 
 // ==================== 6. DOWNLOADABLE PDF EXPORT ====================
 downloadPdfBtn.addEventListener('click', () => {
