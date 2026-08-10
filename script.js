@@ -336,8 +336,7 @@ fetchWebBtn.addEventListener('click', async () => {
     }
 });
 
-
-// ==================== 6. DOWNLOADABLE PDF EXPORT ====================
+// ==================== 6. CLEAN & FORMATTABLE PDF EXPORT ====================
 downloadPdfBtn.addEventListener('click', () => {
     if (flashcardsData.length === 0) return;
 
@@ -352,17 +351,50 @@ downloadPdfBtn.addEventListener('click', () => {
     doc.setFont("helvetica", "normal");
     let y = 30;
 
+    // Comprehensive helper function to map LaTeX symbols to plain text equivalents
+    function cleanMathSymbols(text) {
+        return text
+            .replace(/\$\$?/g, '') // remove markdown/latex dollar signs
+            .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '($1/$2)') // fractions like \frac{1}{2} -> (1/2)
+            .replace(/\^2/g, '²') // superscripts
+            .replace(/\^3/g, '³')
+            .replace(/\^([0-9n])/g, '^$1') // general powers
+            .replace(/\\text\{([^}]+)\}/g, '$1') // remove \text{}
+            .replace(/\\Delta/g, 'Δ')
+            .replace(/\\theta/g, 'θ')
+            .replace(/\\pi/g, 'π')
+            .replace(/\\alpha/g, 'α')
+            .replace(/\\beta/g, 'β')
+            .replace(/\\gamma/g, 'γ')
+            .replace(/\\sigma/g, 'σ')
+            .replace(/\\mu/g, 'μ')
+            .replace(/\\approx/g, '≈')
+            .replace(/\\leq/g, '≤')
+            .replace(/\\geq/g, '≥')
+            .replace(/\\times/g, '×')
+            .replace(/\\div/g, '÷')
+            .replace(/\\pm/g, '±')
+            .replace(/\\infty/g, '∞')
+            .replace(/\\rightarrow/g, '→')
+            .replace(/\\Rightarrow/g, '⇒')
+            .replace(/\\/g, ''); // remove any remaining stray backslashes
+    }
+
     flashcardsData.forEach((card, index) => {
         if (y > 270) {
             doc.addPage();
             y = 20;
         }
+
+        const cleanQ = cleanMathSymbols(card.question);
+        const cleanA = cleanMathSymbols(card.answer);
+
         doc.setFont("helvetica", "bold");
-        doc.text(`${index + 1}. Q: ${card.question}`, 14, y);
+        doc.text(`${index + 1}. Q: ${cleanQ}`, 14, y);
         y += 7;
         
         doc.setFont("helvetica", "normal");
-        const splitAnswer = doc.splitTextToSize(`A: ${card.answer}`, 180);
+        const splitAnswer = doc.splitTextToSize(`A: ${cleanA}`, 180);
         doc.text(splitAnswer, 14, y);
         y += (splitAnswer.length * 6) + 8;
     });
