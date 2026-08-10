@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Flashcard Study Engine</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- jsPDF Library for Exporting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        
+        #flashcard {
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+        #flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+        ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.5); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.8); }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen relative overflow-x-hidden font-sans">
+
+    <!-- 3D Interactive Scroll-Driven Canvas Background -->
+    <canvas id="bgCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- Main Layout Wrapper -->
+    <div class="relative z-10 flex min-h-screen">
+
+        <!-- Left Sidebar: Search History Tracker -->
+        <aside class="w-72 bg-slate-900/80 backdrop-blur-md border-r border-slate-800 p-5 flex flex-col justify-between hidden lg:flex shadow-2xl">
+            <div>
+                <div class="flex items-center gap-2 mb-6">
+                    <div class="w-3 h-3 rounded-full bg-indigo-500 animate-pulse"></div>
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-indigo-400">Search History</h2>
+                </div>
+                <!-- History List Container -->
+                <div id="historyList" class="space-y-2 overflow-y-auto max-h-[70vh] pr-1">
+                    <p class="text-xs text-slate-500 italic">No search history yet...</p>
+                </div>
+            </div>
+            <button id="clearHistoryBtn" class="text-xs text-slate-400 hover:text-red-400 transition-colors py-2 px-3 rounded bg-slate-800/50 hover:bg-slate-800 border border-slate-700/50">
+                Clear History
+            </button>
+        </aside>
+
+        <!-- Right Content Area -->
+        <div class="flex-1 flex flex-col">
+            
+            <!-- Professional Header -->
+            <header class="text-center py-6 px-4 border-b border-slate-800/80 bg-slate-900/40 backdrop-blur-md shadow-lg">
+                <h1 class="text-3xl md:text-4xl font-extrabold tracking-wider bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent uppercase drop-shadow-md">
+                    AI Flashcard Study Engine
+                </h1>
+                <p class="text-xs md:text-sm text-slate-400 mt-1 tracking-wide">
+                    Scroll-driven interactive workspace • Dual voice-enabled • Optimized for student mastery
+                </p>
+            </header>
+
+            <!-- Main Interactive Workspace -->
+            <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                
+                <!-- SECTION 1: Input & AI Generation Panel -->
+                <section class="bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 shadow-2xl flex flex-col h-[640px]">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-sm font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-indigo-500"></span> 1. Input & AI Generation
+                        </h2>
+                        <span class="text-xs text-slate-400">Format: Q: ... A: ...</span>
+                    </div>
+
+                    <!-- Grade and Board Selection Dropdowns -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                        <div>
+                            <label for="gradeSelect" class="block text-xs font-semibold text-slate-400 mb-1">GRADE / LEVEL</label>
+                            <select id="gradeSelect" class="w-full bg-slate-950/80 border border-slate-700/60 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                                <option value="6th Grade">6th Grade</option>
+                                <option value="7th Grade">7th Grade</option>
+                                <option value="8th Grade">8th Grade</option>
+                                <option value="9th Grade">9th Grade</option>
+                                <option value="10th Grade">10th Grade</option>
+                                <option value="11th Grade">11th Grade</option>
+                                <option value="12th Grade">12th Grade</option>
+                                <option value="Undergraduate (SPPU/College)" selected>Undergraduate (SPPU/College)</option>
+                                <option value="Postgraduate (SPPU)">Postgraduate (SPPU)</option>
+                                <option value="Competitive Exam (UPSC/JEE/NEET/CET)">Competitive Exam (UPSC, JEE, NEET, CET)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="boardSelect" class="block text-xs font-semibold text-slate-400 mb-1">BOARD / CURRICULUM</label>
+                            <select id="boardSelect" class="w-full bg-slate-950/80 border border-slate-700/60 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                                <option value="CBSE">CBSE</option>
+                                <option value="ICSE / ISC">ICSE / ISC</option>
+                                <option value="Maharashtra State Board">Maharashtra State Board</option>
+                                <option value="SPPU University Curriculum" selected>SPPU University Curriculum</option>
+                                <option value="General / Competitive Exam Syllabus">General / Competitive Exam</option>
+                                <option value="International (IB / Cambridge)">International (IB / Cambridge)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Topic Search & Voice Controls -->
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="topicInput" placeholder="Enter topic (e.g., Quantum Computing)..."
+                            class="flex-1 bg-slate-950/80 border border-slate-700/60 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-all shadow-inner">
+                        
+                        <button id="fetchMicBtn" title="Voice Search" class="bg-rose-600/80 hover:bg-rose-600 text-white px-3.5 py-2.5 rounded-xl transition shadow-lg flex items-center justify-center">
+                            🎙️
+                        </button>
+                        <button id="fetchWebBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-5 py-2.5 rounded-xl transition shadow-lg text-sm tracking-wide">
+                            Fetch Web
+                        </button>
+                    </div>
+
+                    <!-- Voice Note Dictation -->
+                    <div class="flex items-center justify-between mb-3 bg-slate-950/40 border border-slate-800/60 px-4 py-2 rounded-xl">
+                        <span id="micText" class="text-xs text-slate-400">Dictate Flashcard Note</span>
+                        <button id="micBtn" class="bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/30 text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                            🎙️ Voice Question
+                        </button>
+                    </div>
+
+                    <!-- Markdown Textarea Input -->
+                    <textarea id="markdownInput" placeholder="Q: What is your topic?&#10;A: Detailed explanation and key points will appear here automatically..."
+                        class="flex-1 bg-slate-950/90 border border-slate-700/60 rounded-xl p-4 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 resize-none font-mono shadow-inner"></textarea>
+
+                    <!-- Generate Button -->
+                    <button id="generateBtn" class="mt-4 w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3 rounded-xl transition shadow-xl tracking-wider text-sm uppercase">
+                        Generate Flashcards
+                    </button>
+                </section>
+
+                <!-- SECTION 2: Interactive Flashcard Practice Panel -->
+                <section class="bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 shadow-2xl flex flex-col h-[640px] justify-between">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-sm font-bold text-purple-300 uppercase tracking-wider flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-purple-500"></span> 2. Interactive Practice
+                        </h2>
+                        <button id="downloadPdfBtn" disabled class="bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-purple-300 border border-purple-500/30 text-xs font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-md">
+                            📄 Download PDF
+                        </button>
+                    </div>
+
+                    <!-- 3D Flip Card Container -->
+                    <div class="perspective-1000 my-auto flex items-center justify-center h-80 w-full cursor-pointer">
+                        <div id="flashcard" class="relative w-full h-full transform-style-3d rounded-2xl shadow-2xl border border-slate-700/70">
+                            
+                            <!-- Card Front (Question) -->
+                            <div class="absolute inset-0 backface-hidden bg-gradient-to-br from-slate-900 to-slate-950 rounded-2xl p-6 flex flex-col justify-between border border-indigo-500/20">
+                                <span class="text-xs font-bold uppercase tracking-widest text-indigo-400">Question</span>
+                                <div id="cardQuestion" class="text-lg md:text-xl font-semibold text-center text-slate-100 my-auto overflow-y-auto max-h-48 px-2">
+                                    Click 'Generate Flashcards' to start learning.
+                                </div>
+                                <span class="text-xs text-slate-500 text-center italic">Click card to flip</span>
+                            </div>
+
+                            <!-- Card Back (Answer / Memorization Points) -->
+                            <div class="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-indigo-950/80 to-slate-950 rounded-2xl p-6 flex flex-col justify-between border border-purple-500/30">
+                                <span class="text-xs font-bold uppercase tracking-widest text-purple-400">Key Memorization Points</span>
+                                <div id="cardAnswer" class="text-sm text-left font-normal text-slate-100 my-auto overflow-y-auto max-h-48 px-2 leading-relaxed whitespace-pre-line">
+                                    Answer points will display here.
+                                </div>
+                                <span class="text-xs text-slate-400 text-center italic">Click card to flip back</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Navigation Controls -->
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-800/80">
+                        <button id="prevBtn" disabled class="bg-slate-800/80 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase transition shadow-md border border-slate-700/50">
+                            Previous
+                        </button>
+                        <span id="cardCounter" class="text-xs font-semibold text-slate-400 tracking-wider">Card 0 of 0</span>
+                        <button id="nextBtn" disabled class="bg-slate-800/80 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed px-4 py-2 rounded-xl text-xs font-bold tracking-wider uppercase transition shadow-md border border-slate-700/50">
+                            Next
+                        </button>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Script File Integration -->
+    <script src="script.js"></script>
+</body>
+</html>
