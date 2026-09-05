@@ -38,3 +38,21 @@ Google Gemini API
 AI-generated Study Content
   ↓
 Interactive Flashcards
+
+## 📸 Screenshots
+
+### 🏠 Home
+
+![Home](screenshots/home.png)
+
+### 🧠 AI Flashcards
+
+![AI Flashcards](screenshots/flashcards.png)
+
+### 🎤 Voice Control
+
+![Voice Control](screenshots/voice.png)
+
+### 📄 PDF Export
+
+![PDF Export](screenshots/pdf.png)
