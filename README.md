@@ -39,22 +39,51 @@ AI-generated Study Content
   ↓
 Interactive Flashcards
 
+🔐 Security
+
+The Google Gemini API key is securely stored using Vercel Environment Variables.
+
+The API key is not committed to the GitHub repository or exposed in the frontend.
+
+AI requests are handled through Vercel Serverless Functions.
+
+📖 How to Use
+Open the live application.
+Enter the topic you want to study.
+Select your academic level and curriculum.
+Generate AI-powered study content.
+Review and interact with the generated flashcards.
+Use voice commands when available.
+Export your flashcard deck as a PDF.
 
 
-## 📸 Screenshots
+📸 Screenshots
 
-### 🏠 Home
+🏠 Home
 
-![Home](screenshots/home.png)
+🧠 AI Flashcards
 
-### 🧠 AI Flashcards
+🎤 Voice Control
 
-![AI Flashcards](screenshots/flashcards.png)
+📄 PDF Export
 
-### 🎤 Voice Control
+🚀 Project Highlights
 
-![Voice Control](screenshots/voice.png)
+This project demonstrates:
 
-### 📄 PDF Export
+AI API integration
+Serverless backend development
+Frontend development
+Interactive UI design
+Voice recognition
+PDF generation
+Secure API key management
+Vercel deployment
+🤝 Contributing
 
-![PDF Export](screenshots/pdf.png)
+Suggestions, improvements, and contributions are welcome.
+
+📜 License
+
+This project is available for educational and personal use.
+
