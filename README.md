@@ -79,7 +79,7 @@ Voice recognition
 PDF generation
 Secure API key management
 Vercel deployment
-🤝 Contributing
+🤝 Contributing 
 
 Suggestions, improvements, and contributions are welcome.
 
