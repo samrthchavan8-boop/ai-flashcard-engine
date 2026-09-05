@@ -39,6 +39,8 @@ AI-generated Study Content
   ↓
 Interactive Flashcards
 
+
+
 ## 📸 Screenshots
 
 ### 🏠 Home
