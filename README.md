@@ -26,64 +26,81 @@ An AI-powered study engine that helps students learn any topic using AI-generate
 
 ## 🏗️ Architecture
 
-```text
-User
-  ↓
-Frontend
-  ↓
-Vercel Serverless API
-  ↓
-Google Gemini API
-  ↓
-AI-generated Study Content
-  ↓
-Interactive Flashcards
+**User**
 
-🔐 Security
+↓
 
-The Google Gemini API key is securely stored using Vercel Environment Variables.
+**Frontend**
+
+↓
+
+**Vercel Serverless API**
+
+↓
+
+**Google Gemini API**
+
+↓
+
+**AI-generated Study Content**
+
+↓
+
+**Interactive Flashcards**
+
+## 🔐 Security
+
+The Google Gemini API key is securely stored using **Vercel Environment Variables**.
 
 The API key is not committed to the GitHub repository or exposed in the frontend.
 
 AI requests are handled through Vercel Serverless Functions.
 
-📖 How to Use
-Open the live application.
-Enter the topic you want to study.
-Select your academic level and curriculum.
-Generate AI-powered study content.
-Review and interact with the generated flashcards.
-Use voice commands when available.
-Export your flashcard deck as a PDF.
+## 📖 How to Use
 
+1. Open the live application.
+2. Enter the topic you want to study.
+3. Select your academic level and curriculum.
+4. Generate AI-powered study content.
+5. Review and interact with the generated flashcards.
+6. Use voice commands when available.
+7. Export your flashcard deck as a PDF.
 
-📸 Screenshots
+## 📸 Screenshots
 
-🏠 Home
+### 🏠 Home
 
-🧠 AI Flashcards
+![Home](screenshots/home.png)
 
-🎤 Voice Control
+### 🧠 AI Flashcards
 
-📄 PDF Export
+![AI Flashcards](screenshots/flashcards.png)
 
-🚀 Project Highlights
+### 🎤 Voice Control
+
+![Voice Control](screenshots/voice.png)
+
+### 📄 PDF Export
+
+![PDF Export](screenshots/pdf.png)
+
+## 🚀 Project Highlights
 
 This project demonstrates:
 
-AI API integration
-Serverless backend development
-Frontend development
-Interactive UI design
-Voice recognition
-PDF generation
-Secure API key management
-Vercel deployment
-🤝 Contributing 
+- AI API integration
+- Serverless backend development
+- Frontend development
+- Interactive UI design
+- Voice recognition
+- PDF generation
+- Secure API key management
+- Vercel deployment
+
+## 🤝 Contributing
 
 Suggestions, improvements, and contributions are welcome.
 
-📜 License
+## 📜 License
 
 This project is available for educational and personal use.
-
