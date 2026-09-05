@@ -1,16 +1,40 @@
-# ai-flashcard-engine
-# AI Flashcard Study Engine
+# 🤖 AI Flashcard Engine
 
-An interactive, scroll-driven web application designed to help students master any topic using AI-generated study notes, 3D animated flashcards, voice commands, and PDF exports.
+An AI-powered study engine that helps students learn any topic using AI-generated study notes, interactive 3D flashcards, voice commands, and PDF export.
 
-## Features
-- **AI Generation**: Fetches structured study notes using Google Gemini.
-- **Secure Backend**: Uses Vercel serverless functions to keep API keys secure.
-- **Interactive UI**: 3D animated card flips powered by Tailwind CSS and HTML5 Canvas.
-- **Voice Control**: Supports speech recognition for voice-activated study notes.
-- **Export to PDF**: Save your flashcard decks instantly using jsPDF.
+## 🌐 Live Demo
 
-## Tech Stack
-- Frontend: HTML5, Tailwind CSS, JavaScript
-- Backend: Vercel Serverless Functions (Node.js)
-- AI Model: Google Gemini API
+👉 [Try AI Flashcard Engine](https://ai-flashcard-engine.vercel.app)
+
+## ✨ Features
+
+- 🤖 **AI Generation** — Generate structured study notes using Google Gemini.
+- 🧠 **Interactive Flashcards** — Learn using animated 3D flashcards.
+- 🎤 **Voice Control** — Use voice commands for an interactive study experience.
+- 📄 **PDF Export** — Export your flashcard deck as a PDF.
+- 📱 **Responsive Design** — Designed to work across different screen sizes.
+- ⚡ **Serverless Backend** — AI requests are handled through Vercel Serverless Functions.
+
+## 🛠️ Tech Stack
+
+- **Frontend:** HTML5, CSS, JavaScript, Tailwind CSS
+- **Backend:** Vercel Serverless Functions
+- **Runtime:** Node.js
+- **AI:** Google Gemini API
+- **PDF:** jsPDF
+- **Voice:** Web Speech API
+
+## 🏗️ Architecture
+
+```text
+User
+  ↓
+Frontend
+  ↓
+Vercel Serverless API
+  ↓
+Google Gemini API
+  ↓
+AI-generated Study Content
+  ↓
+Interactive Flashcards
