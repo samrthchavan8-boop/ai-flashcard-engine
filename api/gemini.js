@@ -26,7 +26,8 @@ export default async function handler(req, res) {
         const prompt = `Act as an expert educator. Provide structured study notes and flashcards for the topic: "${topic}". The content must be custom-tailored precisely to the academic level of a student in ${grade}, following the ${board} curriculum standards. Break it down into clear sections using headings (##) and short bullet point facts optimized for student flashcards.`;
 
         // Using the ultra-fast Gemini 3.5 Flash production endpoint
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+        // Using the latest Gemini 3.8 Flash production endpoint
+const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
 
         const geminiRes = await fetch(geminiUrl, {
             method: "POST",
